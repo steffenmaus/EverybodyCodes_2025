@@ -7,33 +7,24 @@ with open('input3.txt') as file:
 
 def calc_score(encoded):
     spine = []
-    spine.append((None, encoded[0], None))
-    for n in encoded[1:]:
-        done = False
+    for n in encoded:
         for i in range(len(spine)):
-            if not done:
-                l, s, r = spine[i]
-                if l is None and n < s:
-                    spine[i] = (n, s, r)
-                    done = True
-                elif r is None and n > s:
-                    spine[i] = (l, s, n)
-                    done = True
-        if not done:
+            l, s, r = spine[i]
+            if l is None and n < s:
+                spine[i] = (n, s, r)
+                break
+            elif r is None and n > s:
+                spine[i] = (l, s, n)
+                break
+        else:
             spine.append((None, n, None))
 
     score = int("".join([str(n[1]) for n in spine]))
 
     levels = []
     for s in spine:
-        cur = ""
-        l, n, r = s
-        if l is not None:
-            cur += str(l)
-        cur += str(n)
-        if r is not None:
-            cur += str(r)
-        levels.append(int(cur))
+        current = "".join([str(x) for x in s if x is not None])
+        levels.append(int(current))
     return score, levels
 
 
@@ -42,7 +33,7 @@ for l in intlines:
     score, levels = calc_score(l[1:])
     results.append((score, levels, l[0]))
 
-results = sorted(results, key=lambda x: (x[0], x[1], x[2]), reverse=True)
+results = sorted(results, reverse=True)
 
 res = 0
 for i in range(len(results)):
