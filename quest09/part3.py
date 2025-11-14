@@ -22,17 +22,14 @@ def search_for_parents(child_id):
 
 def get_all(current, completed):
     completed.add(current)
-    for c in children[current]:
+    for c in connects[current]:
         if c not in completed:
             get_all(c, completed)
-    for p in parents[current]:
-        if p not in completed:
-            get_all(p, completed)
 
 
 codes = {}
-parents = defaultdict(list)
-children = defaultdict(list)
+connects = defaultdict(list)
+
 
 for line in lines:
     id, rest = line.split(":")
@@ -40,10 +37,9 @@ for line in lines:
 
 for child_key in codes:
     res = search_for_parents(child_key)
-    if res:
-        parents[child_key] = res
-        children[res[0]].append(child_key)
-        children[res[1]].append(child_key)
+    for p in res:
+        connects[child_key].append(p)
+        connects[p].append(child_key)
 
 max_size = 0
 result = 0
