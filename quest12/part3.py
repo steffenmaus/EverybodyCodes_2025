@@ -31,11 +31,14 @@ def f(barrels, start):
 
 destroyed = set()
 for _ in range(3):
+    seen = set()
     best_set = set()
     for p in barrels:
-        res = f(barrels, p)
-        if len(res) > len(best_set):
-            best_set = res
+        if p not in seen:
+            res = f(barrels, p)
+            if len(res) > len(best_set):
+                best_set = res
+            seen |= res
 
     destroyed |= best_set
     for p in best_set:
